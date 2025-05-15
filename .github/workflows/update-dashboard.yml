@@ -1,0 +1,33 @@
+name: Update Dashboard
+
+on:
+  schedule:
+    - cron: '0 16 * * *'  # Runs daily at 6 PM Harare time (UTC+2)
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install matplotlib numpy
+
+      - name: Generate updated dashboard
+        run: |
+          python generate_dashboard.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global matteozw 'github-actions'
+          git config --global matthew.mvenge@gmail.com 'actions@github.com'
+          git add .
+          git commit -m 'Automated dashboard update'
+          git push
